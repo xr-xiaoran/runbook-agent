@@ -1,0 +1,42 @@
+services:
+  agent:
+    build: .
+    ports:
+      - "127.0.0.1:8084:8084"
+    environment:
+      API_KEY: ${API_KEY:?set API_KEY in .env}
+      APPROVAL_KEY: ${APPROVAL_KEY:?set APPROVAL_KEY in .env}
+      MODEL_MODE: demo
+      DB_DRIVER: mysql
+      MYSQL_DSN: "agent:${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}@tcp(mysql:3306)/runbook?charset=utf8mb4"
+      REDIS_URL: redis://redis:6379/0
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: runbook
+      MYSQL_USER: agent
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:?set MYSQL_PASSWORD in .env}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?set MYSQL_ROOT_PASSWORD in .env}
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost --silent"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+  redis:
+    image: redis:7.4-alpine
+    command: ["redis-server", "--maxmemory", "64mb", "--maxmemory-policy", "allkeys-lru"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+volumes:
+  mysql-data:
