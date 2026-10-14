@@ -1,0 +1,14 @@
+[
+ {"query":"CampusReward 中奖发奖一直 pending", "expected":"campusreward:1"},
+ {"query":"CampusReward dead fail_first 重放仍失败", "expected":"campusreward:2"},
+ {"query":"CampusReward 签到 UTC 北京时间", "expected":"campusreward:3"},
+ {"query":"stock_exhausted 库存不足退机会吗", "expected":"campusreward:4"},
+ {"query":"CampusReward 401 403 密钥", "expected":"campusreward:5"},
+ {"query":"RetryLab 长任务 续租 心跳", "expected":"retrylab:1"},
+ {"query":"timeout_ms duration_ms 超时", "expected":"retrylab:2"},
+ {"query":"RetryLab max_attempts fail_first dead", "expected":"retrylab:3"},
+ {"query":"queued due 积压 槽位", "expected":"retrylab:4"},
+ {"query":"version 旧执行者 重复执行", "expected":"retrylab:5"},
+ {"query":"SQLite database is locked WAL", "expected":"safety:3"},
+ {"query":"zzzzunfindableword", "expected":""}
+]
